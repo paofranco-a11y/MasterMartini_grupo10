@@ -2,10 +2,24 @@ package com.example.mastermartini.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+//SE DEBEN DE REVISAR LOS COLORES
+
+//BLOQUE PRINCIPAL
+val BluePrimary = Color(0xFF003882)
+val BluePrimaryVariant = Color(0xFF00224F)
+val BlueContainer = Color(0xFFD6E3FF)
+
+val AmberSecondary = Color(0xFFB87800)
+val AmberContainer = Color(0xFFFFDDAE)
+
+val BackgroundWarm = Color(0xFFFBF8F6)
+val SurfaceWhite = Color(0xFFFFFFFF)
+
+//TEXTO DE ALTO CONTRASTE
+val TextDark = Color(0xFF1B1B1E)
+val TextLight = Color(0xFFFFFFFF)
+
+//BLOQUE PARA EXPECIONES Y CAMPOS
+val ErrorColor = Color(0xFFB00020)
+val OutlineColor = Color(0xFF74777F)
