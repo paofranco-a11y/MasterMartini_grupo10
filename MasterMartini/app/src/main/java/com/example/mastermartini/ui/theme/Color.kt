@@ -6,20 +6,22 @@ import androidx.compose.ui.graphics.Color
 //SE DEBEN DE REVISAR LOS COLORES
 
 //BLOQUE PRINCIPAL
-val BluePrimary = Color(0xFF003882)
-val BluePrimaryVariant = Color(0xFF00224F)
-val BlueContainer = Color(0xFFD6E3FF)
+val ColorInstitucional = Color(0xFF003882)
+val ColorInstitucionalOscuro = Color(0xFF001B3F)
+val ColorInstitucionalContenedor = Color(0xFFD6E3FF)
 
-val AmberSecondary = Color(0xFFB87800)
-val AmberContainer = Color(0xFFFFDDAE)
+//BLOQUE COLORES SECUNDARIOS
+val ColorSecundario = Color(0xFFB87800)
+val ColorSecundarioContenedor = Color(0xFFFFDDAE)
 
-val BackgroundWarm = Color(0xFFFBF8F6)
-val SurfaceWhite = Color(0xFFFFFFFF)
+//BLOQUE DE FONDOS
+val FondoPantalla = Color(0xFFFBF8F6)
+val FondoSuperficie = Color(0xFFFFFFFF)
 
 //TEXTO DE ALTO CONTRASTE
-val TextDark = Color(0xFF1B1B1E)
-val TextLight = Color(0xFFFFFFFF)
+val ColorTexto = Color(0xFF1B1B1E)
+val ColorTextoAlterno = Color(0xFFFFFFFF)
 
 //BLOQUE PARA EXPECIONES Y CAMPOS
-val ErrorColor = Color(0xFFB00020)
-val OutlineColor = Color(0xFF74777F)
+val ColorError = Color(0xFFB00020)
+val ColorBorde = Color(0xFF74777F)
