@@ -52,7 +52,23 @@ object RutValidador {
         }
     }
 
+    // funcion para formatear el rut ingresado
+    fun formatearRut(rut: String): String {
+        val limpio = rut.trim().uppercase()
+            .replace(".", "")
+            .replace("-", "")
 
+        if (limpio.length < 2) return limpio
+
+        val cuerpo = limpio.substring(0, limpio.length - 1)
+        val dv = limpio.last()
+
+        // Invertimos el cuerpo con la funcion .reversed(), separamos en cadenas de maximo 3 digitos separados por . y volvemos a invertir
+        val cuerpoFormateado = cuerpo.reversed().chunked(3).joinToString(".").reversed()
+
+        // Finalmente se concatena con el Digito verificador
+        return "$cuerpoFormateado-$dv"
+    }
 
 }
 
