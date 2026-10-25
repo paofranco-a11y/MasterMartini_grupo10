@@ -19,7 +19,6 @@ fun AccessibleButton (
 ) {
 
     Button (
-
         onClick = onClick,
         enabled = enabled,
         modifier = modifier

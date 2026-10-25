@@ -52,7 +52,7 @@ fun MasterMartiniTheme(
             window?.let {
 
                 it.statusBarColor= colorScheme.primary.toArgb()
-                WindowCompat.getInsetsController(it,view).isAppearanceLightStatusBars = false)
+                WindowCompat.getInsetsController(it,view).isAppearanceLightStatusBars = false
             }
 
         }
