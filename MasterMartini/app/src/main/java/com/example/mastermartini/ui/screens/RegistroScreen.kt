@@ -1,5 +1,7 @@
 package com.example.mastermartini.ui.screens
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,14 +26,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.mastermartini.ui.components.MensajeError
 import com.example.mastermartini.viewmodel.RegistroViewModel
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.mastermartini.ui.theme.MasterMartiniTheme
-
+import androidx.compose.material3.MenuAnchorType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,6 +43,13 @@ fun RegistroScreen(
 ) {
     // 1. Observación reactiva: la pantalla se redibuja cada vez que el ViewModel emite cambios
     val uiState by viewModel.uiState.collectAsState()
+
+    // Animacion de boton
+    val escalaBoton by animateFloatAsState(
+        targetValue = if (uiState.isFormValid) 1.0f else 0.96f,
+        animationSpec = tween(durationMillis = 250),
+        label = "animacion_escala_boton"
+    )
 
     // 2. Disparador de navegación cuando el guardado termina
     if (uiState.registroExitoso) {
@@ -65,6 +73,8 @@ fun RegistroScreen(
                 style = MaterialTheme.typography.headlineMedium
             )
 
+            // CAMPOS DE ENTRADA
+
             // Campo Razon Social
             OutlinedTextField(
                 value = uiState.razonSocial,
@@ -72,7 +82,7 @@ fun RegistroScreen(
                 label = { Text("Razón Social") },
                 isError = uiState.errorRazonSocial != null,
                 supportingText = {
-                    uiState.errorRazonSocial?.let { Text(it) }
+                    MensajeError(mensaje = uiState.errorRazonSocial)
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -89,7 +99,7 @@ fun RegistroScreen(
                 label = { Text("RUT Empresa (ej: 12.345.678-5)") },
                 isError = uiState.errorRut != null,
                 supportingText = {
-                    uiState.errorRut?.let { Text(it) }
+                    MensajeError(mensaje = uiState.errorRut)
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -113,10 +123,10 @@ fun RegistroScreen(
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.isDropdownExpanded) },
                     isError = uiState.errorRubro != null,
                     supportingText = {
-                        uiState.errorRubro?.let { Text(it) }
+                        MensajeError(mensaje = uiState.errorRubro)
                     },
                     modifier = Modifier
-                        .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                        .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                         .fillMaxWidth()
                 )
 
@@ -133,7 +143,7 @@ fun RegistroScreen(
                 }
             }
 
-            // --- 4. TELÉFONO CHILENO (9 dígitos) ---
+            // Campo para el numero telefonico
             OutlinedTextField(
                 value = uiState.telefono,
                 onValueChange = { viewModel.onTelefonoChange(it) },
@@ -141,7 +151,7 @@ fun RegistroScreen(
                 prefix = { Text("+56 ") },
                 isError = uiState.errorTelefono != null,
                 supportingText = {
-                    uiState.errorTelefono?.let { Text(it) }
+                    MensajeError(mensaje = uiState.errorTelefono)
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -151,14 +161,15 @@ fun RegistroScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // --- 5. CORREO ELECTRÓNICO ---
+            // Campo para el correo electrónico ---
             OutlinedTextField(
                 value = uiState.email,
                 onValueChange = { viewModel.onEmailChange(it) },
                 label = { Text("Correo Electrónico") },
                 isError = uiState.errorEmail != null,
                 supportingText = {
-                    uiState.errorEmail?.let { Text(it) }
+                    MensajeError(mensaje = uiState.errorEmail)
+
                 },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -170,7 +181,7 @@ fun RegistroScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // --- 6. BOTÓN CON ACCESIBILIDAD Y REGLA DE NEGOCIO (R-01, R-06) ---
+            //Boton para enviar el formulario
             Button(
                 onClick = { viewModel.registrar() },
                 enabled = uiState.isFormValid, // Bloqueado hasta que no queden errores
