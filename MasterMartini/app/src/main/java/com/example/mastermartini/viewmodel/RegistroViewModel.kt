@@ -87,6 +87,10 @@ class RegistroViewModel : ViewModel() {
         evaluarFormularioCompleto()
     }
 
+    // Actualiza la URI de la fotografía capturada
+    fun onFotoCapturada(uri: String) {
+        _uiState.update { it.copy(fotoUri = uri) }
+    }
 
     // bloque para habilitar o deshabilitar el boton de registro
 
@@ -123,13 +127,4 @@ class RegistroViewModel : ViewModel() {
         // Marcamos el registro como exito para que la UI pueda navegar o mostrar confirmación
         _uiState.update { it.copy(registroExitoso = true) }
     }
-
-
-
-
-
-
-
-
-
 }
