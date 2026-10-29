@@ -18,6 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,14 +33,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.mastermartini.data.repository.FavoritosRepository
 import com.example.mastermartini.model.CatalogoDataSource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,10 +54,12 @@ fun DetalleRecetaScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Búsqueda de la receta seleccionada
+    val context = LocalContext.current
+    val repository = remember { FavoritosRepository.getInstance(context) }
+    val esFavorita by repository.esFavorita(recetaId).collectAsState(initial = false)
+
     val receta = CatalogoDataSource.recetas.find { it.id == recetaId }
 
-    // Estados de animación para expandir o colapsar secciones (R-07)
     var insumosExpandido by remember { mutableStateOf(true) }
     var pasosExpandido by remember { mutableStateOf(true) }
 
@@ -64,6 +72,17 @@ fun DetalleRecetaScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Volver al catálogo"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { repository.toggleFavorito(recetaId) }
+                    ) {
+                        Icon(
+                            imageVector = if (esFavorita) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = if (esFavorita) "Quitar de favoritos" else "Guardar en favoritos",
+                            tint = if (esFavorita) Color.Red else MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -90,7 +109,6 @@ fun DetalleRecetaScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(16.dp)
             ) {
-                // Etiqueta de categoría y tiempo
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -140,7 +158,6 @@ fun DetalleRecetaScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Tarjeta animada expandible: Insumos técnicos (R-07 animateContentSize)
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -198,7 +215,6 @@ fun DetalleRecetaScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Tarjeta animada expandible: Pasos de preparación (R-07 animateContentSize)
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
