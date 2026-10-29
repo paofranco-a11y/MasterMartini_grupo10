@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.mastermartini.ui.screens.CatalogoScreen
 import com.example.mastermartini.ui.screens.DetalleRecetaScreen
+import com.example.mastermartini.ui.screens.DistribuidoresScreen
 
 @Composable
 fun AppNavHost(
@@ -29,6 +30,9 @@ fun AppNavHost(
             CatalogoScreen(
                 onRecetaClick = { recetaId ->
                     navController.navigate(Screen.Detalle().crearRuta(recetaId))
+                },
+                onDistribuidoresClick = {
+                    navController.navigate(Screen.Distribuidores.route)
                 }
             )
         }
@@ -49,7 +53,16 @@ fun AppNavHost(
             )
         }
 
-        // Vista 3: Registro de negocio (Módulo Integrante B)
+        // Vista 3: Recurso Nativo GPS - Distribuidores oficiales (R-11)
+        composable(route = Screen.Distribuidores.route) {
+            DistribuidoresScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // Vista 4: Registro de negocio (Módulo Integrante B)
         composable(route = Screen.Registro.route) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -59,7 +72,7 @@ fun AppNavHost(
             }
         }
 
-        // Vista 4: Perfil de usuario (Módulo Integrante B)
+        // Vista 5: Perfil de usuario (Módulo Integrante B)
         composable(route = Screen.Perfil.route) {
             Box(
                 modifier = Modifier.fillMaxSize(),

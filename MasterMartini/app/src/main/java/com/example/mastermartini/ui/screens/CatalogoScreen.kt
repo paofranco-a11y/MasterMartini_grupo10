@@ -3,8 +3,6 @@ package com.example.mastermartini.ui.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,16 +10,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,17 +38,16 @@ import androidx.compose.ui.unit.dp
 import com.example.mastermartini.model.CatalogoDataSource
 import com.example.mastermartini.model.Receta
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CatalogoScreen(
     onRecetaClick: (String) -> Unit,
+    onDistribuidoresClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Categorías disponibles según requerimiento de Master Martini
     val categorias = listOf("Todas", "Chocolatería", "Pastelería", "Panadería")
     var categoriaSeleccionada by remember { mutableStateOf("Todas") }
 
-    // Filtrado reactivo en tiempo real
     val recetasFiltradas = remember(categoriaSeleccionada) {
         if (categoriaSeleccionada == "Todas") {
             CatalogoDataSource.recetas
@@ -53,52 +56,67 @@ fun CatalogoScreen(
         }
     }
 
-    Column(
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Master Martini",
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                actions = {
+                    // Botón para acceder al recurso nativo GPS de distribuidores (R-11)
+                    IconButton(onClick = onDistribuidoresClick) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = "Puntos de distribución"
+                        )
+                    }
+                }
+            )
+        },
         modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // Encabezado técnico
-        Text(
-            text = "Catálogo Técnico Gastronómico",
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Text(
-            text = "Fichas de preparación y formulación Master Martini",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        // Fila de Chips de filtrado interactivo (R-09)
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
         ) {
-            categorias.forEach { cat ->
-                FilterChip(
-                    selected = (cat == categoriaSeleccionada),
-                    onClick = { categoriaSeleccionada = cat },
-                    label = { Text(text = cat) }
-                )
+            Text(
+                text = "Catálogo Técnico y Recetas",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(categorias) { categoria ->
+                    FilterChip(
+                        selected = (categoria == categoriaSeleccionada),
+                        onClick = { categoriaSeleccionada = categoria },
+                        label = { Text(text = categoria) }
+                    )
+                }
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        // Lista perezosa de tarjetas de recetas (R-08)
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(recetasFiltradas, key = { it.id }) { receta ->
-                RecetaCard(
-                    receta = receta,
-                    onClick = { onRecetaClick(receta.id) }
-                )
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(recetasFiltradas) { receta ->
+                    RecetaCard(
+                        receta = receta,
+                        onClick = { onRecetaClick(receta.id) }
+                    )
+                }
             }
         }
     }
@@ -114,7 +132,6 @@ fun RecetaCard(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
@@ -131,7 +148,7 @@ fun RecetaCard(
                 ) {
                     Text(
                         text = receta.categoria,
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
@@ -163,7 +180,7 @@ fun RecetaCard(
 
             Text(
                 text = receta.descripcionCorta,
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
@@ -171,7 +188,7 @@ fun RecetaCard(
 
             Text(
                 text = "Dificultad: ${receta.dificultad}",
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.SemiBold
             )
