@@ -37,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.mastermartini.data.repository.FavoritosRepository
 import com.example.mastermartini.model.CatalogoDataSource
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,8 +57,9 @@ fun DetalleRecetaScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val repository = remember { FavoritosRepository.getInstance(context) }
+    val repository = remember(context) { FavoritosRepository.getInstance(context) }
     val esFavorita by repository.esFavorita(recetaId).collectAsState(initial = false)
+    val coroutineScope = rememberCoroutineScope()
 
     val receta = CatalogoDataSource.recetas.find { it.id == recetaId }
 
@@ -77,7 +80,11 @@ fun DetalleRecetaScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { repository.toggleFavorito(recetaId) }
+                        onClick = {
+                            coroutineScope.launch {
+                                repository.toggleFavorito(recetaId)
+                            }
+                        }
                     ) {
                         Icon(
                             imageVector = if (esFavorita) Icons.Default.Favorite else Icons.Default.FavoriteBorder,

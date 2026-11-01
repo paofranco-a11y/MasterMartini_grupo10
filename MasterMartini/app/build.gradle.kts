@@ -59,6 +59,9 @@ dependencies {
     // Servicios de localización para georreferenciación de sucursales/distribuidores
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
+    // Persistencia local con Jetpack DataStore Preferences
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
     // Entorno de pruebas y depuración
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
