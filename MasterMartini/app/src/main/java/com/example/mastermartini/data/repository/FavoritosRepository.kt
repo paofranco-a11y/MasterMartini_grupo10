@@ -1,37 +1,45 @@
 package com.example.mastermartini.data.repository
 
 import android.content.Context
-import android.content.SharedPreferences
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringSetPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-// Repositorio de persistencia local para favoritos sin conexión (R-13)
-class FavoritosRepository private constructor(context: Context) {
+// Extensión contextual estándar para DataStore Preferences
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "favoritos_recetas_prefs")
 
-    private val prefs: SharedPreferences =
-        context.applicationContext.getSharedPreferences("favoritos_recetas_prefs", Context.MODE_PRIVATE)
+class FavoritosRepository private constructor(private val context: Context) {
 
-    private val _favoritosIds = MutableStateFlow<Set<String>>(emptySet())
-    val favoritosIds: StateFlow<Set<String>> = _favoritosIds.asStateFlow()
+    // Clave para almacenar el conjunto de identificadores de recetas favoritas
+    private val CLAVE_FAVORITOS = stringSetPreferencesKey("ids_favoritas")
 
-    init {
-        val guardados = prefs.getStringSet("ids_favoritas", emptySet()) ?: emptySet()
-        _favoritosIds.value = guardados
+    // Flujo observable con el conjunto de recetas favoritas
+    val favoritosIds: Flow<Set<String>> = context.dataStore.data.map { preferences ->
+        preferences[CLAVE_FAVORITOS] ?: emptySet()
     }
 
-    fun esFavorita(recetaId: String) = favoritosIds.map { it.contains(recetaId) }
-
-    fun toggleFavorito(recetaId: String) {
-        val actuales = _favoritosIds.value.toMutableSet()
-        if (actuales.contains(recetaId)) {
-            actuales.remove(recetaId)
-        } else {
-            actuales.add(recetaId)
+    // Comprueba si una receta específica está guardada en favoritos
+    fun esFavorita(recetaId: String): Flow<Boolean> {
+        return favoritosIds.map { setIds ->
+            setIds.contains(recetaId)
         }
-        prefs.edit().putStringSet("ids_favoritas", actuales).apply()
-        _favoritosIds.value = actuales
+    }
+
+    // Alterna el estado (guarda o elimina de DataStore de forma asíncrona)
+    suspend fun toggleFavorito(recetaId: String) {
+        context.dataStore.edit { preferences ->
+            val actuales = preferences[CLAVE_FAVORITOS]?.toMutableSet() ?: mutableSetOf()
+            if (actuales.contains(recetaId)) {
+                actuales.remove(recetaId)
+            } else {
+                actuales.add(recetaId)
+            }
+            preferences[CLAVE_FAVORITOS] = actuales
+        }
     }
 
     companion object {
@@ -40,7 +48,7 @@ class FavoritosRepository private constructor(context: Context) {
 
         fun getInstance(context: Context): FavoritosRepository {
             return INSTANCE ?: synchronized(this) {
-                val instance = FavoritosRepository(context)
+                val instance = FavoritosRepository(context.applicationContext)
                 INSTANCE = instance
                 instance
             }
