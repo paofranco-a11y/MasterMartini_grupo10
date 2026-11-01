@@ -10,7 +10,7 @@ import java.util.Locale
 
 object CameraUtils {
     /**
-     * Crea un archivo .jpg vacío en el directorio de caché de la app
+     ##Se Crea un archivo .jpg vacío en el directorio de caché de la app
      * y genera su URI segura utilizando FileProvider.
      */
     fun crearUriTemporal(context: Context): Uri {

@@ -1,19 +1,24 @@
 package com.example.mastermartini.viewmodel
 
+import android.app.Application
 import android.util.Patterns
-import androidx.lifecycle.ViewModel
-import com.example.mastermartini.model.PerfilNegocio
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.mastermartini.data.model.PerfilNegocio
+import com.example.mastermartini.data.repository.NegocioRepository
 import com.example.mastermartini.util.RutValidador
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class RegistroViewModel : ViewModel() {
+class RegistroViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val repository = NegocioRepository(application.applicationContext)
 
     private val _uiState = MutableStateFlow(RegistroUiState())
-
     val uiState: StateFlow<RegistroUiState> = _uiState.asStateFlow()
 
     // Opciones para escoger en el menu desplegable
@@ -25,7 +30,33 @@ class RegistroViewModel : ViewModel() {
         "Masas y Pizzería"
     )
 
-    // funciones para validar los campos de entrada
+    init {
+        // Cargar datos previos si ya existe una sesión guardada en DataStore (Cold Boot)
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.perfilNegocioFlow.collect { perfilGuardado ->
+                if (perfilGuardado != null) {
+                    _uiState.update { actual ->
+                        actual.copy(
+                            razonSocial = perfilGuardado.razonSocial,
+                            rut = perfilGuardado.rut,
+                            rubro = perfilGuardado.rubro,
+                            telefono = perfilGuardado.telefono,
+                            email = perfilGuardado.email,
+                            fotoUri = perfilGuardado.fotoUri,
+                            errorRazonSocial = null,
+                            errorRut = null,
+                            errorRubro = null,
+                            errorTelefono = null,
+                            errorEmail = null,
+                            isFormValid = true
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    // Funciones para validar los campos de entrada
 
     fun onRazonSocialChange(nuevoTexto: String) {
         val error = when {
@@ -92,8 +123,7 @@ class RegistroViewModel : ViewModel() {
         _uiState.update { it.copy(fotoUri = uri) }
     }
 
-    // bloque para habilitar o deshabilitar el boton de registro
-
+    // Bloque para habilitar o deshabilitar el boton de registro
     private fun evaluarFormularioCompleto() {
         _uiState.update { actual ->
             val camposLlenos = actual.razonSocial.isNotBlank() &&
@@ -112,19 +142,36 @@ class RegistroViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Persiste el perfil de negocio en DataStore Preferences y activa la sesión en Dispatchers.IO
+     */
     fun registrar() {
-        if (!_uiState.value.isFormValid) return
+        val currentState = _uiState.value
+        if (!currentState.isFormValid) return
 
         val perfil = PerfilNegocio(
-            razonSocial = _uiState.value.razonSocial.trim(),
-            rutEmpresa = RutValidador.formatearRut(_uiState.value.rut),
-            rubro = _uiState.value.rubro,
-            telefono = _uiState.value.telefono,
-            email = _uiState.value.email.trim(),
-            fotoUri = _uiState.value.fotoUri
+            razonSocial = currentState.razonSocial.trim(),
+            rut = RutValidador.formatearRut(currentState.rut),
+            rubro = currentState.rubro.trim(),
+            telefono = currentState.telefono.trim(),
+            email = currentState.email.trim(),
+            fotoUri = currentState.fotoUri
         )
 
-        // Marcamos el registro como exito para que la UI pueda navegar o mostrar confirmación
-        _uiState.update { it.copy(registroExitoso = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                repository.guardarPerfilNegocio(perfil)
+                _uiState.update { it.copy(registroExitoso = true) }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun cerrarSesion() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.cerrarSesion()
+            _uiState.update { RegistroUiState() }
+        }
     }
 }
