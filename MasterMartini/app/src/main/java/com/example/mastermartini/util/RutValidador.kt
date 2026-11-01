@@ -52,6 +52,17 @@ object RutValidador {
         }
     }
 
+    // funcion para limpiar el rut quitando puntos, guiones y espacios
+    fun limpiarRut(rut: String): String {
+        return rut.trim().uppercase()
+            .replace(".", "")
+            .replace("-", "")
+            .replace(" ", "")
+    }
+
+    // alias para validar
+    fun validar(rutCompleto: String): Boolean = validarRut(rutCompleto)
+
     // funcion para formatear el rut ingresado
     fun formatearRut(rut: String): String {
         val limpio = rut.trim().uppercase()
