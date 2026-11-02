@@ -2,26 +2,28 @@ package com.example.mastermartini.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+// ========================================================
+// VARIABLES ORIGINALES CON LOS NUEVOS VALORES DE LA PALETA
+// ========================================================
 
-//SE DEBEN DE REVISAR LOS COLORES
+// BLOQUE PRINCIPAL (Primario / Marca: Rojo Carmín #C01E2E)
+val ColorInstitucional = Color(0xFF2D5A3D)
+val ColorInstitucionalOscuro = Color(0xFF1B3B26)
+val ColorInstitucionalContenedor = Color(0xFFE2EFE5)
 
-//BLOQUE PRINCIPAL
-val ColorInstitucional = Color(0xFF003882)
-val ColorInstitucionalOscuro = Color(0xFF001B3F)
-val ColorInstitucionalContenedor = Color(0xFFD6E3FF)
+// BLOQUE COLORES SECUNDARIOS (Secundario: Azul Marino Profundo #1A2B49)
+val ColorSecundario = Color(0xFF4A6B53)
+val ColorSecundarioContenedor = Color(0xFFD3E0D9)
 
-//BLOQUE COLORES SECUNDARIOS
-val ColorSecundario = Color(0xFFB87800)
-val ColorSecundarioContenedor = Color(0xFFFFDDAE)
-
-//BLOQUE DE FONDOS
-val FondoPantalla = Color(0xFFFBF8F6)
+// BLOQUE DE FONDOS (Fondo: Gris/Crema Claro #F7F7F7, Superficie: Blanco Puro #FFFFFF)
+val FondoPantalla = Color(0xFFF4F6F4)
 val FondoSuperficie = Color(0xFFFFFFFF)
 
-//TEXTO DE ALTO CONTRASTE
-val ColorTexto = Color(0xFF1B1B1E)
+// TEXTO (Texto Principal: Gris Carbón Oscuro #333333, Alterno: Blanco #FFFFFF)
+val ColorTexto = Color(0xFF1B241E)
 val ColorTextoAlterno = Color(0xFFFFFFFF)
 
-//BLOQUE PARA EXPECIONES Y CAMPOS
-val ColorError = Color(0xFFB00020)
-val ColorBorde = Color(0xFF74777F)
+// BLOQUE PARA EXCEPCIONES Y CAMPOS
+val ColorError = Color(0xFFBA1A1A)
+val ColorBorde = Color(0xFF747873)
+

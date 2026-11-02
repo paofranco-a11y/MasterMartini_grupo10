@@ -79,11 +79,11 @@ class NegocioRepository(private val context: Context) {
     }
 
     /**
-     * Invalida la sesión actual y limpia las credenciales guardadas.
+     * Invalida la sesión actual sin borrar el registro de la empresa.
      */
     suspend fun cerrarSesion() {
         context.dataStore.edit { prefs ->
-            prefs.clear()
+            prefs[PreferencesKeys.SESION_ACTIVA] = false
         }
     }
 }
