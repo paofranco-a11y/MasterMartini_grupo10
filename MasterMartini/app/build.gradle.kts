@@ -52,11 +52,28 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.coil.compose)
 
+    // Retrofit y Corrutinas (IL3.1)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.kotlinx.coroutines.android)
+
     testImplementation(libs.junit)
+    testImplementation(libs.kotest.runner.junit5)
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.vintage.engine)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+}
+
+// Requerido para ejecutar JUnit 5 y Kotest
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
 }

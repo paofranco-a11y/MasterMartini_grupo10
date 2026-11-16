@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!-- Permiso de acceso a Internet para Retrofit / API REST -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- Permisos nativos de ubicación GPS para Distribuidores (R-11) -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -18,7 +21,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MasterMartini">
+        android:theme="@style/Theme.MasterMartini"
+        android:usesCleartextTraffic="true">
 
         <activity
             android:name=".MainActivity"
