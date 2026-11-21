@@ -1,10 +1,6 @@
 package com.example.mastermartini.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -17,6 +13,7 @@ import com.example.mastermartini.ui.screens.DistribuidoresScreen
 import com.example.mastermartini.ui.screens.FavoritosScreen
 import com.example.mastermartini.ui.screens.HomeScreen
 import com.example.mastermartini.ui.screens.PerfilScreen
+import com.example.mastermartini.ui.screens.RecetasRemoteScreen
 import com.example.mastermartini.ui.screens.RegistroScreen
 import com.example.mastermartini.ui.screens.login.LoginScreen
 
@@ -53,6 +50,9 @@ fun AppNavHost(
                 },
                 onIrADistribuidores = {
                     navController.navigate(Screen.Distribuidores.route)
+                },
+                onIrARecetasRemote = {
+                    navController.navigate(Screen.RecetasRemote.route)
                 },
                 onCerrarSesion = {
                     navController.navigate(Screen.Login.route) {
@@ -103,6 +103,15 @@ fun AppNavHost(
         composable(route = Screen.Distribuidores.route) {
             DistribuidoresScreen(
                 onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // Vista CRUD Remoto: Recetas en la Nube con MockAPI
+        composable(route = Screen.RecetasRemote.route) {
+            RecetasRemoteScreen(
+                onNavigateBack = {
                     navController.popBackStack()
                 }
             )

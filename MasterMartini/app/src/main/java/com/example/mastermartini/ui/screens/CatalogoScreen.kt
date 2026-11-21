@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.mastermartini.model.CatalogoDataSource
@@ -94,12 +95,13 @@ fun CatalogoScreen(
 
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag("lista_filtros_categoria")
             ) {
                 items(categorias) { categoria ->
                     FilterChip(
                         selected = (categoria == categoriaSeleccionada),
                         onClick = { categoriaSeleccionada = categoria },
+                        modifier = Modifier.testTag("filtro_categoria_$categoria"),
                         label = { Text(text = categoria) }
                     )
                 }
@@ -109,7 +111,7 @@ fun CatalogoScreen(
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize().testTag("lista_recetas_catalogo")
             ) {
                 items(recetasFiltradas) { receta ->
                     RecetaCard(

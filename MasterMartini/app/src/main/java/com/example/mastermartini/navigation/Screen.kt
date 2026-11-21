@@ -10,6 +10,8 @@ sealed class Screen(val route: String) {
     data object Registro : Screen("registro_screen")
     data object Perfil : Screen("perfil_screen")
 
+    data object RecetasRemote : Screen("recetas_remote_screen")
+
     data class Detalle(val recetaId: String = "{recetaId}") : Screen("detalle_screen/{recetaId}") {
         fun crearRuta(id: String): String {
             return "detalle_screen/$id"
