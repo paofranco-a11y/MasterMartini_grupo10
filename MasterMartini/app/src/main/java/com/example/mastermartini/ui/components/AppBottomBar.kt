@@ -59,11 +59,11 @@ fun AppBottomBar(navController: NavHostController) {
                 onClick = {
                     if (currentRoute != item.route) {
                         navController.navigate(item.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                            popUpTo(Screen.Home.route) {
+                                saveState = (item.route != Screen.Home.route)
                             }
                             launchSingleTop = true
-                            restoreState = true
+                            restoreState = (item.route != Screen.Home.route)
                         }
                     }
                 }

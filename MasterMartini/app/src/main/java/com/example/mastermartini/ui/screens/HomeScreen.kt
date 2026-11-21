@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.example.mastermartini.data.repository.NegocioRepository
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     onIrAlCatalogo: () -> Unit = {},
     onIrADistribuidores: () -> Unit = {},
+    onIrARecetasRemote: () -> Unit = {}, // Nuevo parámetro para ir al CRUD en la nube
     onCerrarSesion: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -65,6 +67,18 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Acceso al CRUD Remoto (MockAPI)
+            Button(
+                onClick = onIrARecetasRemote,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("btn_ir_recetas_remote")
+            ) {
+                Text("Recetario Comunitario")
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
             // Acceso a Puntos de Distribución (GPS)
             Button(
                 onClick = onIrADistribuidores,
@@ -90,4 +104,3 @@ fun HomeScreen(
         }
     }
 }
-

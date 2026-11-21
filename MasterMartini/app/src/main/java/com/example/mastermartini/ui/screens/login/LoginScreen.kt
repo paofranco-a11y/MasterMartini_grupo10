@@ -33,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -129,7 +130,7 @@ fun LoginScreen(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag("input_rut")
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -148,7 +149,7 @@ fun LoginScreen(
                     keyboardType = KeyboardType.Email,
                     imeAction = ImeAction.Done
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().testTag("input_email")
             )
 
             Spacer(modifier = Modifier.height(28.dp))
@@ -161,6 +162,7 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .heightIn(min = 48.dp)
                     .scale(escalaBoton)
+                    .testTag("btn_iniciar_sesion")
             ) {
                 if (uiState.isLoading) {
                     CircularProgressIndicator(
