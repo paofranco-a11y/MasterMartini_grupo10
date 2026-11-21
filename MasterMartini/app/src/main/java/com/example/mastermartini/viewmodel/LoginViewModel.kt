@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mastermartini.data.repository.NegocioRepository
 import com.example.mastermartini.ui.screens.login.LoginUiState
 import com.example.mastermartini.util.RutValidador
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,9 +15,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class LoginViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository = NegocioRepository(application.applicationContext)
+class LoginViewModel @JvmOverloads constructor(
+    application: Application,
+    private val repository: NegocioRepository = NegocioRepository(application.applicationContext),
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : AndroidViewModel(application) {
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
@@ -68,7 +71,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
         _uiState.update { it.copy(isLoading = true, errorAutenticacion = null) }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             try {
                 val perfilGuardado = repository.perfilNegocioFlow.firstOrNull()
 
