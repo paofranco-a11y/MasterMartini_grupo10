@@ -56,11 +56,14 @@ El Recetario Comunitario consume una API externa en **MockAPI.io**, por medio de
    Las pruebas de interfaz están en `app/src/androidTest/java/com/example/mastermartini/MasterMartiniUiTest.kt`.
 4. Compilar la app: ejecutar `app` en un emulador o dispositivo (minSdk 24), o generar el APK de debug con `./gradlew assembleDebug`. Se necesita internet para el Recetario Comunitario.
 
-# 6. Captura del APK firmado y `.jks`
+## 6. Captura del APK firmado y .jks
 
-El APK firmado (`release`) se generó con el asistente de Android Studio (`Build > Generate Signed App Bundle / APK...`) usando un almacén de claves local.
+El APK firmado (`release`) fue generado y configurado en `app/build.gradle.kts` (`signingConfigs`) junto al almacén de claves, cumpliendo con los requisitos de entrega de la asignatura.
 
-- **APK firmado:** `app/release/app-release.apk`
-- **Archivo de firma:** `mastermartini_key.jks`. Por seguridad no se sube al repositorio, la clave y sus contraseñas se mantienen privadas.
+* **APK firmado:** `app/build/outputs/apk/release/app-release.apk` (y `app/release/app-release.apk`)
+* **Archivo de firma (Keystore):** `app/mastermartini_key.jks`
+* **Credenciales de validación (para evaluación docente):**
+   * **Key Alias:** `key_mastermartini`
+   * **Store Password / Key Password:** `Master2026`
 
 ![APK firmado y Keystore](docs/captura_apk_jks.png)
