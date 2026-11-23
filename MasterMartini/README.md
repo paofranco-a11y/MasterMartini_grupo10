@@ -23,7 +23,7 @@ Está armada con arquitectura MVVM (`model`, `data`, `viewmodel`, `ui`), Navigat
 
 El Recetario Comunitario consume una API externa en **MockAPI.io**, por medio de Retrofit (`RetrofitInstance` y `RecetaApiService`). No hay un microservicio propio en el proyecto.
 
-**URL base:** `https://6afe63113a0e70bc8d5367db.mockapi.io/api/v1/`
+**URL base:** `https://6afe63113a0e70bc8d5367db.mockapi.io/api/v1/` -- https://mockapi.io/projects/6afe63113a0e70bc8d5367dc
 
 | Método | Ruta | Uso |
 |--------|------|-----|
