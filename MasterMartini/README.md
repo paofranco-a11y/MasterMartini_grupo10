@@ -66,4 +66,4 @@ El APK firmado (`release`) fue generado y configurado en `app/build.gradle.kts` 
    * **Key Alias:** `key_mastermartini`
    * **Store Password / Key Password:** `Master2026`
 
-![APK firmado y Keystore](docs/captura_apk_jks.png)
+![APK firmado y Keystore](docs/captura_apk_jks)
